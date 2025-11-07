@@ -36,6 +36,8 @@ const UserAppointments = () => {
         console.log('Fetching appointments from backend...');
         const data = await fetchAppointments();
         console.log('Appointments fetched:', data);
+        console.log('Data type:', typeof data);
+        console.log('Is array:', Array.isArray(data));
 
         setAppointments(data);
       } catch (error) {

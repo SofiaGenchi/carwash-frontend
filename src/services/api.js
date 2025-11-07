@@ -36,7 +36,19 @@ export async function fetchAppointments() {
     throw new Error(errorData.message || 'Error fetching appointments');
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  // Manejar diferentes estructuras de respuesta de la API
+  if (Array.isArray(data)) {
+    return data;
+  } else if (data.appointments && Array.isArray(data.appointments)) {
+    return data.appointments;
+  } else if (data.data && Array.isArray(data.data)) {
+    return data.data;
+  } else {
+    console.warn('Estructura de respuesta inesperada:', data);
+    return [];
+  }
 }
 
 export async function createAppointment(appointmentData) {

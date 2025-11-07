@@ -1,7 +1,9 @@
 import React from 'react';
 
 const AppointmentsList = ({ appointments, onCancelAppointment }) => {
-  const activeAppointments = appointments ? appointments.filter(a => a.status !== 'cancelled') : [];
+  // Validación más robusta para asegurar que appointments sea un array
+  const appointmentsArray = Array.isArray(appointments) ? appointments : [];
+  const activeAppointments = appointmentsArray.filter(a => a.status !== 'cancelled');
   if (activeAppointments.length === 0) {
     return (
       <section className="appointments-section">
