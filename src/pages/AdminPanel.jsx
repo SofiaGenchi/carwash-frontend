@@ -58,9 +58,28 @@ const AdminPanel = () => {
     setLoading(true);
     setError('');
     try {
-      const data = await fetchAllAppointments();
-      console.log('Appointments data received:', data);
-      setAppointments(Array.isArray(data) ? data : []);
+      const [appointmentsData, usersData, servicesData] = await Promise.all([
+        fetchAllAppointments(),
+        fetchAllUsers(),
+        fetchAllServices()
+      ]);
+      
+      console.log('Raw appointments data:', appointmentsData);
+      
+      // Enriquecer appointments con datos de user y service
+      const enrichedAppointments = appointmentsData.map(appt => {
+        const user = usersData.find(u => u._id === appt.user);
+        const service = servicesData.find(s => s._id === appt.service);
+        
+        return {
+          ...appt,
+          user: user || { nombre: 'Usuario no encontrado', apellido: '' },
+          service: service || { name: 'Servicio no encontrado' }
+        };
+      });
+      
+      console.log('Enriched appointments:', enrichedAppointments);
+      setAppointments(Array.isArray(enrichedAppointments) ? enrichedAppointments : []);
     } catch (err) {
       setError(err.message);
     } finally {
