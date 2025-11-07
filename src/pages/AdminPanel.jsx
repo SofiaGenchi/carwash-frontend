@@ -44,7 +44,8 @@ const AdminPanel = () => {
     setError('');
     try {
       const data = await fetchAllUsers();
-      setUsers(data);
+      console.log('Users data received:', data);
+      setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -58,7 +59,8 @@ const AdminPanel = () => {
     setError('');
     try {
       const data = await fetchAllAppointments();
-      setAppointments(data);
+      console.log('Appointments data received:', data);
+      setAppointments(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -72,7 +74,8 @@ const AdminPanel = () => {
     setError('');
     try {
       const data = await fetchAllServices();
-      setServices(data);
+      console.log('Services data received:', data);
+      setServices(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err.message);
     } finally {

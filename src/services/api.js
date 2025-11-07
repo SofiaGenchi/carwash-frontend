@@ -118,12 +118,22 @@ export async function fetchAllUsers() {
     throw new Error(errorData.message || 'Error fetching users');
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  // Manejar estructura de respuesta: {users: [...]} o array directo
+  if (Array.isArray(data)) {
+    return data;
+  } else if (data.users && Array.isArray(data.users)) {
+    return data.users;
+  } else {
+    console.warn('Unexpected users response structure:', data);
+    return [];
+  }
 }
 
 export async function fetchAllAppointments() {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch('/api/appointments', {
+  const response = await fetch('/api/appointments/all', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -136,7 +146,17 @@ export async function fetchAllAppointments() {
     throw new Error(errorData.message || 'Error fetching appointments');
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  // Manejar estructura de respuesta: {appointments: [...]} o array directo
+  if (Array.isArray(data)) {
+    return data;
+  } else if (data.appointments && Array.isArray(data.appointments)) {
+    return data.appointments;
+  } else {
+    console.warn('Unexpected appointments response structure:', data);
+    return [];
+  }
 }
 
 export async function fetchAllServices() {
@@ -152,7 +172,17 @@ export async function fetchAllServices() {
     throw new Error(errorData.message || 'Error fetching services');
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  // Manejar estructura de respuesta: {services: [...]} o array directo
+  if (Array.isArray(data)) {
+    return data;
+  } else if (data.services && Array.isArray(data.services)) {
+    return data.services;
+  } else {
+    console.warn('Unexpected services response structure:', data);
+    return [];
+  }
 }
 
 // Admin Edit/Update functions
