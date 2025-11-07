@@ -147,15 +147,16 @@ export async function fetchAllAppointments() {
   }
 
   const data = await response.json();
+  console.log('Raw appointments API response:', data);
   
-  // Manejar estructura de respuesta: {appointments: [...]} o array directo
+  // Siempre devolver estructura consistente {appointments: [...]}
   if (Array.isArray(data)) {
-    return data;
+    return { appointments: data };
   } else if (data.appointments && Array.isArray(data.appointments)) {
-    return data.appointments;
+    return data;
   } else {
     console.warn('Unexpected appointments response structure:', data);
-    return [];
+    return { appointments: [] };
   }
 }
 
