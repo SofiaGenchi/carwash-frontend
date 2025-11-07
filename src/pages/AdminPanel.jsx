@@ -66,15 +66,56 @@ const AdminPanel = () => {
     setLoading(true);
     setError('');
     try {
-      const data = await fetchAllAppointments();
-      console.log('Appointments data received:', data);
-      
-      // The backend now returns populated appointments with user and service data
-      const appointmentsArray = Array.isArray(data?.appointments) 
-        ? data.appointments 
+      // Fetch all data in parallel since backend populate doesn't work in microservices
+      const [appointmentsResponse, usersResponse, servicesResponse] = await Promise.all([
+        fetchAllAppointments(),
+        fetchAllUsers(),
+        fetchAllServices()
+      ]);
+
+      console.log('Appointments response:', appointmentsResponse);
+      console.log('Users response:', usersResponse);
+      console.log('Services response:', servicesResponse);
+
+      // Extract arrays from responses
+      const appointmentsArray = Array.isArray(appointmentsResponse?.appointments) 
+        ? appointmentsResponse.appointments 
         : [];
       
-      setAppointments(appointmentsArray);
+      const usersArray = Array.isArray(usersResponse?.users) 
+        ? usersResponse.users 
+        : [];
+      
+      const servicesArray = Array.isArray(servicesResponse?.services) 
+        ? servicesResponse.services 
+        : [];
+
+      console.log('Extracted arrays:', {
+        appointments: appointmentsArray,
+        users: usersArray,
+        services: servicesArray
+      });
+
+      // Create lookup maps
+      const usersMap = usersArray.reduce((map, user) => {
+        map[user._id] = user;
+        return map;
+      }, {});
+
+      const servicesMap = servicesArray.reduce((map, service) => {
+        map[service._id] = service;
+        return map;
+      }, {});
+
+      // Enrich appointments with user and service data
+      const enrichedAppointments = appointmentsArray.map(appointment => ({
+        ...appointment,
+        user: usersMap[appointment.user] || { name: 'Usuario no encontrado', email: 'N/A' },
+        service: servicesMap[appointment.service] || { name: 'Servicio no encontrado', price: 0 }
+      }));
+      
+      console.log('Enriched appointments:', enrichedAppointments);
+      setAppointments(enrichedAppointments);
     } catch (err) {
       setError(err.message);
     } finally {
