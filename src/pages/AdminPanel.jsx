@@ -45,7 +45,15 @@ const AdminPanel = () => {
     try {
       const data = await fetchAllUsers();
       console.log('Users data received:', data);
-      setUsers(Array.isArray(data) ? data : []);
+      
+      // Extract users array from response
+      const usersArray = Array.isArray(data?.users) 
+        ? data.users 
+        : Array.isArray(data) 
+          ? data 
+          : [];
+      
+      setUsers(usersArray);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -58,28 +66,15 @@ const AdminPanel = () => {
     setLoading(true);
     setError('');
     try {
-      const [appointmentsData, usersData, servicesData] = await Promise.all([
-        fetchAllAppointments(),
-        fetchAllUsers(),
-        fetchAllServices()
-      ]);
+      const data = await fetchAllAppointments();
+      console.log('Appointments data received:', data);
       
-      console.log('Raw appointments data:', appointmentsData);
+      // The backend now returns populated appointments with user and service data
+      const appointmentsArray = Array.isArray(data?.appointments) 
+        ? data.appointments 
+        : [];
       
-      // Enriquecer appointments con datos de user y service
-      const enrichedAppointments = appointmentsData.map(appt => {
-        const user = usersData.find(u => u._id === appt.user);
-        const service = servicesData.find(s => s._id === appt.service);
-        
-        return {
-          ...appt,
-          user: user || { nombre: 'Usuario no encontrado', apellido: '' },
-          service: service || { name: 'Servicio no encontrado' }
-        };
-      });
-      
-      console.log('Enriched appointments:', enrichedAppointments);
-      setAppointments(Array.isArray(enrichedAppointments) ? enrichedAppointments : []);
+      setAppointments(appointmentsArray);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -94,7 +89,15 @@ const AdminPanel = () => {
     try {
       const data = await fetchAllServices();
       console.log('Services data received:', data);
-      setServices(Array.isArray(data) ? data : []);
+      
+      // Extract services array from response
+      const servicesArray = Array.isArray(data?.services) 
+        ? data.services 
+        : Array.isArray(data) 
+          ? data 
+          : [];
+      
+      setServices(servicesArray);
     } catch (err) {
       setError(err.message);
     } finally {
