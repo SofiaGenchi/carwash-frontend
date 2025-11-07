@@ -15,11 +15,16 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
     const fetchServices = async () => {
       setLoading(true);
       try {
-        const res = await fetch('/services');
+        const res = await fetch('/api/services');
         const data = await res.json();
-        setServices(data);
-        setAllServices(data);
+        console.log('Services data received:', data);
+        
+        // Manejar la estructura de respuesta {services: [...]}
+        const servicesArray = data.services || data || [];
+        setServices(servicesArray);
+        setAllServices(servicesArray);
       } catch (err) {
+        console.error('Error fetching services:', err);
         setError('Error al cargar servicios');
       } finally {
         setLoading(false);
@@ -50,13 +55,20 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
             className="take-appointment-search"
             onChange={e => {
               const val = e.target.value.toLowerCase();
-              setServices(
-                allServices.filter(serv => serv.name.toLowerCase().includes(val))
-              );
+              if (Array.isArray(allServices)) {
+                setServices(
+                  allServices.filter(serv => serv.name && serv.name.toLowerCase().includes(val))
+                );
+              }
             }}
           />
           <div className="service-list">
-            {services.map(service => (
+            {services.length === 0 ? (
+              <p style={{ textAlign: 'center', color: '#666', marginTop: '20px' }}>
+                {error || 'No hay servicios disponibles en este momento'}
+              </p>
+            ) : (
+              services.map(service => (
               <div
                 key={service._id}
                 className={`service-card-selectable${selectedService && selectedService._id === service._id ? ' selected' : ''}`}
@@ -77,7 +89,7 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
                 <div className="service-card-desc">{service.description}</div>
                 <div className="service-card-price">ARS {service.price}</div>
               </div>
-            ))}
+            )))}
           </div>
           {selectedService && (
             <div className="take-appointment-actions">
