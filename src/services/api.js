@@ -119,11 +119,14 @@ export async function fetchAllUsers() {
   }
 
   const data = await response.json();
+  console.log('fetchAllUsers raw response:', data);
   
   // Manejar estructura de respuesta: {users: [...]} o array directo
   if (Array.isArray(data)) {
+    console.log('fetchAllUsers returning array directly:', data);
     return data;
   } else if (data.users && Array.isArray(data.users)) {
+    console.log('fetchAllUsers returning data.users:', data.users);
     return data.users;
   } else {
     console.warn('Unexpected users response structure:', data);
@@ -174,9 +177,11 @@ export async function fetchAllServices() {
   }
 
   const data = await response.json();
+  console.log('fetchAllServices raw response:', data);
   
   // Manejar estructura de respuesta: {services: [...]} o array directo
   if (Array.isArray(data)) {
+    console.log('fetchAllServices returning array directly:', data);
     return data;
   } else if (data.services && Array.isArray(data.services)) {
     return data.services;
