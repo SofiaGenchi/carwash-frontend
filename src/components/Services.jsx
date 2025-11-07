@@ -10,9 +10,10 @@ function Services() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await fetch('/services');
+        const res = await fetch('/api/services');
         const data = await res.json();
-        setServices(data);
+        // El Gateway API devuelve { services: [...] }
+        setServices(data.services || data);
       } catch (err) {
         setError('Error al cargar servicios');
       } finally {

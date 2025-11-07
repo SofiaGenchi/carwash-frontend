@@ -1,6 +1,6 @@
 export async function cancelAppointment(appointmentId) {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch(`/appointments/${appointmentId}`, {
+  const response = await fetch(`/api/appointments/${appointmentId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export async function fetchData() {
 
 export async function fetchAppointments() {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch('/appointments', {
+  const response = await fetch('/api/appointments', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export async function fetchAppointments() {
 
 export async function createAppointment(appointmentData) {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch('/appointments', {
+  const response = await fetch('/api/appointments', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export async function createAppointment(appointmentData) {
 // Admin API functions
 export async function fetchAllUsers() {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch('/users', {
+  const response = await fetch('/api/users', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export async function fetchAllUsers() {
 
 export async function fetchAllAppointments() {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch('/appointments/all', {
+  const response = await fetch('/api/appointments', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export async function fetchAllAppointments() {
 }
 
 export async function fetchAllServices() {
-  const response = await fetch('/services', {
+  const response = await fetch('/api/services', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ export async function fetchAllServices() {
 // Admin Edit/Update functions
 export async function updateUser(userId, userData) {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch(`/users/${userId}`, {
+  const response = await fetch(`/api/users/${userId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ export async function updateUser(userId, userData) {
 
 export async function updateAppointment(appointmentId, appointmentData) {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch(`/appointments/${appointmentId}`, {
+  const response = await fetch(`/api/appointments/${appointmentId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ export async function updateAppointment(appointmentId, appointmentData) {
 
 export async function updateService(serviceId, serviceData) {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch(`/services/${serviceId}`, {
+  const response = await fetch(`/api/services/${serviceId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ export async function updateService(serviceId, serviceData) {
 }
 
 export const forgotPassword = async (email) => {
-  const res = await fetch('/users/forgot-password', {
+  const res = await fetch('/api/users/forgot-password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email })
@@ -179,7 +179,7 @@ export const forgotPassword = async (email) => {
 };
 
 export const resetPassword = async (token, password) => {
-  const res = await fetch('/users/reset-password', {
+  const res = await fetch('/api/users/reset-password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token, password })

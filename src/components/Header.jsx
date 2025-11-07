@@ -37,7 +37,7 @@ const Header = () => {
     setShowLogoutOverlay(true);
     const user = JSON.parse(localStorage.getItem('user'));
     if (user && user._id) {
-      await fetch('/auth/logout', {
+      await fetch('/api/auth/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
