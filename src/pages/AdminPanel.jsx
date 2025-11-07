@@ -101,6 +101,20 @@ const AdminPanel = () => {
       console.log('Appointment service IDs:', appointmentsArray.map(a => a.service));
       console.log('Available user IDs:', usersArray.map(u => u._id));
       console.log('Available service IDs:', servicesArray.map(s => s._id));
+      
+      // Check for exact matches
+      appointmentsArray.forEach(appointment => {
+        const userExists = usersArray.find(u => u._id === appointment.user);
+        const serviceExists = servicesArray.find(s => s._id === appointment.service);
+        console.log(`Appointment ${appointment._id}:`, {
+          needsUser: appointment.user,
+          userExists: !!userExists,
+          userFound: userExists?._id,
+          needsService: appointment.service, 
+          serviceExists: !!serviceExists,
+          serviceFound: serviceExists?._id
+        });
+      });
 
       // Create lookup maps
       const usersMap = usersArray.reduce((map, user) => {
@@ -133,8 +147,14 @@ const AdminPanel = () => {
           // Preservar IDs originales para edición, pero agregar datos completos para mostrar
           originalUserId: appointment.user, // ID original como string
           originalServiceId: appointment.service, // ID original como string
-          user: user || { name: 'Usuario no encontrado', email: 'N/A' },
-          service: service || { name: 'Servicio no encontrado', price: 0 }
+          user: user || { 
+            name: `Usuario no encontrado (ID: ${appointment.user.substring(0,8)}...)`, 
+            email: 'N/A' 
+          },
+          service: service || { 
+            name: `Servicio no encontrado (ID: ${appointment.service.substring(0,8)}...)`, 
+            price: 0 
+          }
         };
       });
       
