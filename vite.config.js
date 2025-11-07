@@ -5,11 +5,27 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Proxy para todas las rutas del backend apuntando al Gateway API
-      '/api': {
-        target: process.env.NODE_ENV === 'production' 
-          ? 'https://gateway-api-lztd.onrender.com'
-          : 'http://localhost:3000',
+      // Temporalmente apuntando directamente a los microservicios para debugging
+      '/api/users': {
+        target: 'https://users-api-jmp5.onrender.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api\/users/, '/api/users'),
+      },
+      '/api/services': {
+        target: 'https://carwash-services.onrender.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api\/services/, '/api/services'),
+      },
+      '/api/appointments': {
+        target: 'https://carwash-appointments.onrender.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api\/appointments/, '/api/appointments'),
+      },
+      '/api/auth': {
+        target: 'https://gateway-api-lztd.onrender.com',
         changeOrigin: true,
         secure: true,
       },
