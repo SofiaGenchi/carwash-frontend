@@ -23,6 +23,14 @@ export async function fetchData() {
 
 export async function fetchAppointments() {
   const token = localStorage.getItem('accessToken');
+  
+  console.log('fetchAppointments - Token available:', !!token);
+  if (!token) {
+    console.warn('No authentication token available');
+    return [];
+  }
+  
+  console.log('fetchAppointments - Making request to /api/appointments');
   const response = await fetch('/api/appointments', {
     method: 'GET',
     headers: {
@@ -53,8 +61,21 @@ export async function fetchAppointments() {
 
 export async function createAppointment(appointmentData) {
   const token = localStorage.getItem('accessToken');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
   
+  console.log('Token available:', !!token);
+  console.log('Token length:', token ? token.length : 0);
+  console.log('User info:', user);
   console.log('Sending appointment data:', appointmentData);
+  
+  // Validar que tengamos los datos necesarios
+  if (!token) {
+    throw new Error('No hay token de autenticación. Por favor, inicia sesión nuevamente.');
+  }
+  
+  if (!appointmentData.serviceId || !appointmentData.date || !appointmentData.time) {
+    throw new Error('Datos incompletos: se requieren serviceId, date y time.');
+  }
   
   const response = await fetch('/api/appointments', {
     method: 'POST',
