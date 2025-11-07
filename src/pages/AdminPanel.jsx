@@ -248,6 +248,10 @@ const AdminPanel = () => {
             service: payload.originalServiceId || data.service?._id || data.service
           };
           
+          console.log('Appointment payload being sent:', appointmentPayload);
+          console.log('Original data:', data);
+          console.log('Form payload:', payload);
+          
           await updateAppointment(data._id, appointmentPayload);
           await fetchAppointmentsData();
           break;

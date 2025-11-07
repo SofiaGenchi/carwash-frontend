@@ -208,6 +208,13 @@ export async function updateUser(userId, userData) {
 
 export async function updateAppointment(appointmentId, appointmentData) {
   const token = localStorage.getItem('accessToken');
+  
+  console.log('updateAppointment called with:', {
+    appointmentId,
+    appointmentData,
+    stringifiedData: JSON.stringify(appointmentData)
+  });
+  
   const response = await fetch(`/api/appointments/${appointmentId}`, {
     method: 'PUT',
     headers: {
