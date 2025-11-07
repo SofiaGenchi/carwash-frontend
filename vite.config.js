@@ -5,11 +5,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Proxy para todas las rutas del backend apuntando al Gateway API
       '/api': {
-        target: 'https://gateway-api-lztd.onrender.com',
+        target: 'https://gateway-api-lztd.onrender.com', 
         changeOrigin: true,
         secure: true,
+        rewrite: (path) => path,
       },
     },
   },
