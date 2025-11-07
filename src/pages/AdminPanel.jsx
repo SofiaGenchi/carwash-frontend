@@ -130,6 +130,9 @@ const AdminPanel = () => {
 
         return {
           ...appointment,
+          // Preservar IDs originales para edición, pero agregar datos completos para mostrar
+          originalUserId: appointment.user, // ID original como string
+          originalServiceId: appointment.service, // ID original como string
           user: user || { name: 'Usuario no encontrado', email: 'N/A' },
           service: service || { name: 'Servicio no encontrado', price: 0 }
         };
@@ -186,23 +189,9 @@ const AdminPanel = () => {
 
 
   const openEditModal = (type, data) => {
-    // Preparar los datos para el modal con IDs preservados
-    let modalData = { ...data };
+    console.log('Opening edit modal with data:', data);
     
-    // Si es un appointment, preservar IDs originales antes de cualquier modificación
-    if (type === 'appointment') {
-      modalData.originalUserId = data.user?._id || data.user;
-      modalData.originalServiceId = data.service?._id || data.service;
-      
-      console.log('Preserving original IDs:', {
-        originalUserId: modalData.originalUserId,
-        originalServiceId: modalData.originalServiceId,
-        userObject: data.user,
-        serviceObject: data.service
-      });
-    }
-    
-    setEditModal({ show: true, type, data: modalData });
+    setEditModal({ show: true, type, data });
     
     // Preparar los datos para el formulario
     let formData = { ...data };
@@ -250,20 +239,22 @@ const AdminPanel = () => {
             payload.time = `${hours}.${minutes}hs`;
           }
           
-          // Usar los IDs originales de editModal.data (que no han sido modificados)
+          // Usar los IDs originales que preservamos en el enriquecimiento
           const appointmentPayload = {
             date: payload.date,
             time: payload.time,
             status: payload.status,
             notes: payload.notes || '',
-            // Usar los IDs originales del objeto data, no del formulario
-            user: editModal.data.originalUserId || (typeof editModal.data.user === 'string' ? editModal.data.user : editModal.data.user?._id),
-            service: editModal.data.originalServiceId || (typeof editModal.data.service === 'string' ? editModal.data.service : editModal.data.service?._id)
+            // Usar los IDs originales preservados
+            user: editModal.data.originalUserId,
+            service: editModal.data.originalServiceId
           };
           
           console.log('Appointment payload being sent:', appointmentPayload);
-          console.log('Original editModal.data:', editModal.data);
-          console.log('Form payload:', payload);
+          console.log('Using preserved IDs:', {
+            originalUserId: editModal.data.originalUserId,
+            originalServiceId: editModal.data.originalServiceId
+          });
           
           await updateAppointment(data._id, appointmentPayload);
           await fetchAppointmentsData();
