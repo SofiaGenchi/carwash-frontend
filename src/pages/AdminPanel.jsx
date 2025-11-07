@@ -198,6 +198,10 @@ const AdminPanel = () => {
       // Asegurar formato HH:MM
       const [hours, minutes] = timeStr.split(':');
       formData.time = `${hours.padStart(2, '0')}:${(minutes || '00').padStart(2, '0')}`;
+      
+      // Preservar los IDs originales de user y service para el envío
+      formData.originalUserId = data.user?._id || data.user;
+      formData.originalServiceId = data.service?._id || data.service;
     }
     
     setEditForm(formData);
@@ -233,7 +237,18 @@ const AdminPanel = () => {
             const [hours, minutes] = payload.time.split(':');
             payload.time = `${hours}.${minutes}hs`;
           }
-          await updateAppointment(data._id, payload);
+          
+          // Usar los IDs originales preservados
+          const appointmentPayload = {
+            date: payload.date,
+            time: payload.time,
+            status: payload.status,
+            notes: payload.notes,
+            user: payload.originalUserId || data.user?._id || data.user,
+            service: payload.originalServiceId || data.service?._id || data.service
+          };
+          
+          await updateAppointment(data._id, appointmentPayload);
           await fetchAppointmentsData();
           break;
         case 'service':
