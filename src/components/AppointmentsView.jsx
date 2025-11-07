@@ -12,6 +12,7 @@ const AppointmentsView = ({ appointments, openEditModal }) => (
             <th>Cliente</th>
             <th>Servicio</th>
             <th>Fecha</th>
+            <th>Hora</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -26,9 +27,10 @@ const AppointmentsView = ({ appointments, openEditModal }) => (
               <td>{appt.service?.nombre || appt.service?.name || '-'}</td>
               <td>
                 {appt.date
-                  ? `${new Date(appt.date).toLocaleDateString()}, ${appt.time}`
+                  ? new Date(appt.date).toLocaleDateString('es-ES')
                   : '-'}
               </td>
+              <td>{appt.time || '-'}</td>
               <td>
                 <span className={`status-badge ${appt.status}`}>
                   {appt.status || '-'}

@@ -187,7 +187,20 @@ const AdminPanel = () => {
 
   const openEditModal = (type, data) => {
     setEditModal({ show: true, type, data });
-    setEditForm({ ...data });
+    
+    // Preparar los datos para el formulario
+    let formData = { ...data };
+    
+    // Si es un appointment, convertir el time al formato correcto para input type="time"
+    if (type === 'appointment' && formData.time) {
+      // Convertir "10.00hs" a "10:00"
+      const timeStr = formData.time.replace('hs', '').replace('.', ':');
+      // Asegurar formato HH:MM
+      const [hours, minutes] = timeStr.split(':');
+      formData.time = `${hours.padStart(2, '0')}:${(minutes || '00').padStart(2, '0')}`;
+    }
+    
+    setEditForm(formData);
   };
 
   const closeEditModal = () => {
@@ -215,6 +228,11 @@ const AdminPanel = () => {
           await fetchUsersData();
           break;
         case 'appointment':
+          // Convertir el time de "10:00" a "10.00hs" para la API
+          if (payload.time) {
+            const [hours, minutes] = payload.time.split(':');
+            payload.time = `${hours}.${minutes}hs`;
+          }
           await updateAppointment(data._id, payload);
           await fetchAppointmentsData();
           break;
