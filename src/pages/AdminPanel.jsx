@@ -46,14 +46,8 @@ const AdminPanel = () => {
       const data = await fetchAllUsers();
       console.log('Users data received:', data);
       
-      // Extract users array from response
-      const usersArray = Array.isArray(data?.users) 
-        ? data.users 
-        : Array.isArray(data) 
-          ? data 
-          : [];
-      
-      setUsers(usersArray);
+      // fetchAllUsers ya retorna el array directamente
+      setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -82,12 +76,14 @@ const AdminPanel = () => {
         ? appointmentsResponse.appointments 
         : [];
       
-      const usersArray = Array.isArray(usersResponse?.users) 
-        ? usersResponse.users 
+      // fetchAllUsers ya retorna el array directamente, no un objeto {users: [...]}
+      const usersArray = Array.isArray(usersResponse) 
+        ? usersResponse 
         : [];
       
-      const servicesArray = Array.isArray(servicesResponse?.services) 
-        ? servicesResponse.services 
+      // fetchAllServices ya retorna el array directamente, no un objeto {services: [...]}
+      const servicesArray = Array.isArray(servicesResponse) 
+        ? servicesResponse 
         : [];
 
       console.log('Extracted arrays:', {
@@ -175,14 +171,8 @@ const AdminPanel = () => {
       const data = await fetchAllServices();
       console.log('Services data received:', data);
       
-      // Extract services array from response
-      const servicesArray = Array.isArray(data?.services) 
-        ? data.services 
-        : Array.isArray(data) 
-          ? data 
-          : [];
-      
-      setServices(servicesArray);
+      // fetchAllServices ya retorna el array directamente
+      setServices(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err.message);
     } finally {
