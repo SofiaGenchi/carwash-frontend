@@ -53,6 +53,9 @@ export async function fetchAppointments() {
 
 export async function createAppointment(appointmentData) {
   const token = localStorage.getItem('accessToken');
+  
+  console.log('Sending appointment data:', appointmentData);
+  
   const response = await fetch('/api/appointments', {
     method: 'POST',
     headers: {
@@ -62,9 +65,17 @@ export async function createAppointment(appointmentData) {
     body: JSON.stringify(appointmentData),
   });
 
+  console.log('Response status:', response.status);
+
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Error al crear el turno');
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch (e) {
+      errorData = { message: `HTTP ${response.status}: ${response.statusText}` };
+    }
+    console.error('API Error:', errorData);
+    throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
   }
 
   return response.json();

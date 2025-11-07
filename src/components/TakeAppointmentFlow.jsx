@@ -201,14 +201,26 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
                 setLoading(true);
                 setError('');
                 try {
-                  await createAppointment({ service: selectedService._id, date, time });
+                  console.log('Creating appointment with data:', {
+                    serviceId: selectedService._id,
+                    date,
+                    time
+                  });
+                  await createAppointment({ 
+                    serviceId: selectedService._id, 
+                    date, 
+                    time 
+                  });
                   setStep(4);
                   if (onAppointmentCreated) onAppointmentCreated();
                 } catch (err) {
+                  console.error('Error creating appointment:', err);
                   if (err.message.includes('No puedes reservar en fechas pasadas') || err.message.includes('No puedes reservar en horarios pasados')) {
                     setError('Fecha u hora no válidos');
+                  } else if (err.message.includes('500')) {
+                    setError('Error del servidor. Verifica que todos los datos sean correctos.');
                   } else {
-                    setError('Error al reservar turno');
+                    setError(`Error al reservar turno: ${err.message}`);
                   }
                 } finally {
                   setLoading(false);
