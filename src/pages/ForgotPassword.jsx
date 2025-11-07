@@ -13,15 +13,20 @@ const ForgotPassword = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log('ForgotPassword: handleSubmit called with email:', email);
     setLoading(true);
     setError('');
     try {
-      await forgotPassword(email);
+      console.log('ForgotPassword: calling forgotPassword API...');
+      const result = await forgotPassword(email);
+      console.log('ForgotPassword: API response:', result);
       setSent(true);
-    } catch {
+    } catch (err) {
+      console.error('ForgotPassword: error occurred:', err);
       setError('Hubo un error. Intenta nuevamente.');
     } finally {
       setLoading(false);
+      console.log('ForgotPassword: process completed');
     }
   };
 

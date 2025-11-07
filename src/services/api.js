@@ -257,12 +257,28 @@ export async function updateService(serviceId, serviceData) {
 }
 
 export const forgotPassword = async (email) => {
-  const res = await fetch('/api/users/forgot-password', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email })
-  });
-  return res.json();
+  console.log('forgotPassword called with email:', email);
+  
+  try {
+    const res = await fetch('/api/users/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    
+    console.log('forgotPassword response status:', res.status);
+    const data = await res.json();
+    console.log('forgotPassword response data:', data);
+    
+    if (!res.ok) {
+      throw new Error(data.message || 'Error en forgot password');
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('forgotPassword error:', error);
+    throw error;
+  }
 };
 
 export const resetPassword = async (token, password) => {
