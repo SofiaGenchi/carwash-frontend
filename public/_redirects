@@ -1,0 +1,5 @@
+# Redirect API calls to gateway
+/api/*  https://gateway-api-lztd.onrender.com/api/:splat  200
+
+# SPA fallback
+/*  /index.html  200
