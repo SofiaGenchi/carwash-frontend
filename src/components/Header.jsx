@@ -35,17 +35,6 @@ const Header = () => {
 
   const handleLogout = async () => {
     setShowLogoutOverlay(true);
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user._id) {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        },
-        body: JSON.stringify({ userId: user._id })
-      });
-    }
     logout();
     setLogoutMsg('Sesión cerrada correctamente');
     setTimeout(() => {
