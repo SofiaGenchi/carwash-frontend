@@ -60,11 +60,51 @@ const Register = () => {
           <div className="login-right">
             <form className="login-form" onSubmit={handleSubmit}>
               <h2>Registrarse</h2>
-              <input type="text" name="nombre" placeholder="Nombre" required value={form.nombre} onChange={handleChange} />
-              <input type="text" name="apellido" placeholder="Apellido" required value={form.apellido} onChange={handleChange} />
-              <input type="email" name="email" placeholder="Correo electrónico" required value={form.email} onChange={handleChange} />
-              <input type="tel" name="telefono" placeholder="Teléfono" required value={form.telefono} onChange={handleChange} />
-              <input type="password" name="password" placeholder="Contraseña" required value={form.password} onChange={handleChange} />
+              <input 
+                type="text" 
+                name="nombre" 
+                placeholder="Nombre" 
+                required 
+                value={form.nombre} 
+                onChange={handleChange}
+                autoComplete="given-name"
+              />
+              <input 
+                type="text" 
+                name="apellido" 
+                placeholder="Apellido" 
+                required 
+                value={form.apellido} 
+                onChange={handleChange}
+                autoComplete="family-name"
+              />
+              <input 
+                type="email" 
+                name="email" 
+                placeholder="Correo electrónico" 
+                required 
+                value={form.email} 
+                onChange={handleChange}
+                autoComplete="email"
+              />
+              <input 
+                type="tel" 
+                name="telefono" 
+                placeholder="Teléfono" 
+                required 
+                value={form.telefono} 
+                onChange={handleChange}
+                autoComplete="tel"
+              />
+              <input 
+                type="password" 
+                name="password" 
+                placeholder="Contraseña" 
+                required 
+                value={form.password} 
+                onChange={handleChange}
+                autoComplete="new-password"
+              />
               <button type="submit" className="login-btn-full" disabled={loading}>Registrarse</button>
               <button type="button" className="register-btn" onClick={() => navigate('/login')}>Iniciar sesión</button>
               {error && <div style={{ color: 'red', marginTop: 10 }}>{error}</div>}

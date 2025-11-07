@@ -60,8 +60,24 @@ const Login = () => {
             <form className="login-form" onSubmit={handleSubmit}>
               <h2>Iniciar sesión</h2>
               {error && <div style={{ color: 'red', marginBottom: 10, textAlign: 'center' }}>Usuario o contraseña incorrectos</div>}
-              <input type="email" name="email" placeholder="Correo electrónico" required value={form.email} onChange={handleChange} />
-              <input type="password" name="password" placeholder="Contraseña" required value={form.password} onChange={handleChange} />
+              <input 
+                type="email" 
+                name="email" 
+                placeholder="Correo electrónico" 
+                required 
+                value={form.email} 
+                onChange={handleChange}
+                autoComplete="email"
+              />
+              <input 
+                type="password" 
+                name="password" 
+                placeholder="Contraseña" 
+                required 
+                value={form.password} 
+                onChange={handleChange}
+                autoComplete="current-password"
+              />
               <button type="submit" className="login-btn-full" disabled={loading}>Iniciar sesión</button>
               <button type="button" className="register-btn" onClick={() => navigate('/register')}>Registrarse</button>
               <button
