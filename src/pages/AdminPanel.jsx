@@ -96,6 +96,12 @@ const AdminPanel = () => {
         services: servicesArray
       });
 
+      // Debug: Log specific IDs
+      console.log('Appointment user IDs:', appointmentsArray.map(a => a.user));
+      console.log('Appointment service IDs:', appointmentsArray.map(a => a.service));
+      console.log('Available user IDs:', usersArray.map(u => u._id));
+      console.log('Available service IDs:', servicesArray.map(s => s._id));
+
       // Create lookup maps
       const usersMap = usersArray.reduce((map, user) => {
         map[user._id] = user;
@@ -107,12 +113,27 @@ const AdminPanel = () => {
         return map;
       }, {});
 
+      console.log('Users map:', usersMap);
+      console.log('Services map:', servicesMap);
+
       // Enrich appointments with user and service data
-      const enrichedAppointments = appointmentsArray.map(appointment => ({
-        ...appointment,
-        user: usersMap[appointment.user] || { name: 'Usuario no encontrado', email: 'N/A' },
-        service: servicesMap[appointment.service] || { name: 'Servicio no encontrado', price: 0 }
-      }));
+      const enrichedAppointments = appointmentsArray.map(appointment => {
+        const user = usersMap[appointment.user];
+        const service = servicesMap[appointment.service];
+        
+        console.log(`Mapping appointment ${appointment._id}:`, {
+          userIdFromAppointment: appointment.user,
+          foundUser: user,
+          serviceIdFromAppointment: appointment.service,
+          foundService: service
+        });
+
+        return {
+          ...appointment,
+          user: user || { name: 'Usuario no encontrado', email: 'N/A' },
+          service: service || { name: 'Servicio no encontrado', price: 0 }
+        };
+      });
       
       console.log('Enriched appointments:', enrichedAppointments);
       setAppointments(enrichedAppointments);
