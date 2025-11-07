@@ -186,7 +186,23 @@ const AdminPanel = () => {
 
 
   const openEditModal = (type, data) => {
-    setEditModal({ show: true, type, data });
+    // Preparar los datos para el modal con IDs preservados
+    let modalData = { ...data };
+    
+    // Si es un appointment, preservar IDs originales antes de cualquier modificación
+    if (type === 'appointment') {
+      modalData.originalUserId = data.user?._id || data.user;
+      modalData.originalServiceId = data.service?._id || data.service;
+      
+      console.log('Preserving original IDs:', {
+        originalUserId: modalData.originalUserId,
+        originalServiceId: modalData.originalServiceId,
+        userObject: data.user,
+        serviceObject: data.service
+      });
+    }
+    
+    setEditModal({ show: true, type, data: modalData });
     
     // Preparar los datos para el formulario
     let formData = { ...data };
@@ -198,10 +214,6 @@ const AdminPanel = () => {
       // Asegurar formato HH:MM
       const [hours, minutes] = timeStr.split(':');
       formData.time = `${hours.padStart(2, '0')}:${(minutes || '00').padStart(2, '0')}`;
-      
-      // Preservar los IDs originales de user y service para el envío
-      formData.originalUserId = data.user?._id || data.user;
-      formData.originalServiceId = data.service?._id || data.service;
     }
     
     setEditForm(formData);
@@ -238,18 +250,19 @@ const AdminPanel = () => {
             payload.time = `${hours}.${minutes}hs`;
           }
           
-          // Usar los IDs originales preservados
+          // Usar los IDs originales de editModal.data (que no han sido modificados)
           const appointmentPayload = {
             date: payload.date,
             time: payload.time,
             status: payload.status,
-            notes: payload.notes,
-            user: payload.originalUserId || data.user?._id || data.user,
-            service: payload.originalServiceId || data.service?._id || data.service
+            notes: payload.notes || '',
+            // Usar los IDs originales del objeto data, no del formulario
+            user: editModal.data.originalUserId || (typeof editModal.data.user === 'string' ? editModal.data.user : editModal.data.user?._id),
+            service: editModal.data.originalServiceId || (typeof editModal.data.service === 'string' ? editModal.data.service : editModal.data.service?._id)
           };
           
           console.log('Appointment payload being sent:', appointmentPayload);
-          console.log('Original data:', data);
+          console.log('Original editModal.data:', editModal.data);
           console.log('Form payload:', payload);
           
           await updateAppointment(data._id, appointmentPayload);
