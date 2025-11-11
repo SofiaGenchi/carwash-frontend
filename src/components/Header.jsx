@@ -8,6 +8,7 @@ import '../index.css';
 const publicNavItems = [
   { label: 'Inicio', scrollTo: 'hero', isScroll: true },
   { label: 'Servicios', scrollTo: 'servicios', isScroll: true },
+  { label: 'Turnos', to: '/dashboard', isScroll: false },
   { label: 'Contacto', scrollTo: 'contacto', isScroll: true },
 ];
 

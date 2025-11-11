@@ -22,10 +22,9 @@ const UserAppointments = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Redirect to login if not authenticated
+    // If not authenticated, don't fetch, just set loading to false
     if (!isAuthenticated) {
-      localStorage.setItem('loginRedirect', '/user-appointments');
-      navigate('/login');
+      setLoading(false);
       return;
     }
 
@@ -57,6 +56,18 @@ const UserAppointments = () => {
         <Header />
         <main style={{ marginTop: 80, padding: 20, textAlign: 'center' }}>
           <p>Cargando tus turnos...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div>
+        <Header />
+        <main style={{ marginTop: 80, padding: 20, textAlign: 'center' }}>
+          <p>Para ver o agendar turnos, por favor inicie sesión.</p>
         </main>
         <Footer />
       </div>
