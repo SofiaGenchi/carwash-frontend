@@ -65,6 +65,23 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
             }}
           />
           {error && <p className="take-appointment-error">{error}</p>}
+          <div className="services-list">
+            {services.map(service => (
+              <div key={service._id} className="service-item">
+                <h3>{service.name}</h3>
+                <p>{service.description}</p>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    setSelectedService(service);
+                    setStep(2);
+                  }}
+                >
+                  Seleccionar
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     );
