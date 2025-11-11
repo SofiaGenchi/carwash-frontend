@@ -1,9 +1,8 @@
 // Cancel an appointment by ID
 export async function cancelAppointment(appointmentId) {
   const token = localStorage.getItem('accessToken');
-  const apiUrl = 'https://gateway-api-lztd.onrender.com';
   const response = await fetch(
-    `${apiUrl}/api/appointments/cancel/${appointmentId}`,
+    `/api/appointments/cancel/${appointmentId}`,
     {
       method: 'DELETE',
       headers: {
