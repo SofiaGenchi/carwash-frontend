@@ -44,7 +44,7 @@ const ForgotPassword = () => {
           <h2>Recuperar contraseña</h2>
           {sent ? (
             <div className="forgot-password-message">
-              Si el correo existe, recibirás un enlace para restablecer tu contraseña.
+              Hemos enviado un correo electrónico con las instrucciones para restablecer tu contraseña.
             </div>
           ) : (
             <>
