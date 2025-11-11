@@ -4,15 +4,13 @@ export async function cancelAppointment(appointmentId) {
   console.log('cancelAppointment - Token available:', !!token);
   console.log('cancelAppointment - Cancelling appointment ID:', appointmentId);
   const response = await fetch(
-    `/api/appointments/${appointmentId}`,
+    `/api/appointments/cancel/${appointmentId}`,
     {
-      method: 'PUT',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ status: 'cancelled' }),
-      credentials: 'include',
     }
   );
   console.log('cancelAppointment - Response status:', response.status);
