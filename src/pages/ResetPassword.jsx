@@ -17,15 +17,19 @@ const ResetPassword = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     setError('');
+    console.log('ResetPassword - Submitting with token:', token, 'password length:', password.length);
     try {
+      console.log('ResetPassword - Calling resetPassword');
       const res = await resetPassword(token, password);
+      console.log('ResetPassword - resetPassword response:', res);
       if (res.message === 'Contraseña actualizada correctamente.') {
         setDone(true);
         setTimeout(() => navigate('/login'), 2000);
       } else {
         setError(res.message || 'Error al restablecer la contraseña.');
       }
-    } catch {
+    } catch (err) {
+      console.error('ResetPassword - Error:', err);
       setError('Error al restablecer la contraseña.');
     }
   };

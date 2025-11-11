@@ -17,19 +17,25 @@ const ForgotPassword = () => {
     setLoading(true);
     setError('');
     try {
+      console.log('ForgotPassword - Calling forgotPassword with email:', email);
       const result = await forgotPassword(email);
+      console.log('ForgotPassword - forgotPassword result:', result);
       if (result && result.token && result.name && result.email) {
         const link = `${window.location.origin}/reset-password?token=${result.token}`;
+        console.log('ForgotPassword - Sending recovery email to:', result.email, 'with link:', link);
         await sendRecoveryEmail({
           email: result.email,
           name: result.name,
           link
         });
+        console.log('ForgotPassword - Recovery email sent successfully');
         setSent(true);
       } else {
+        console.error('ForgotPassword - Invalid result from forgotPassword:', result);
         setError('No se pudo obtener los datos para el email.');
       }
     } catch (err) {
+      console.error('ForgotPassword - Error in handleSubmit:', err);
       setError('Hubo un error. Intenta nuevamente.');
     } finally {
       setLoading(false);
