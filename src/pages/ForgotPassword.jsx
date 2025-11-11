@@ -54,6 +54,9 @@ const ForgotPassword = () => {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
               />
+              <button type="submit" className="login-btn-full" disabled={loading}>
+                {loading ? 'Enviando...' : 'Enviar'}
+              </button>
               {error && <div className="forgot-password-error">{error}</div>}
             </>
           )}
