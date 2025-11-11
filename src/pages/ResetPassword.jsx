@@ -22,13 +22,9 @@ const ResetPassword = () => {
       console.log('ResetPassword - Calling resetPassword');
       const res = await resetPassword(token, password);
       console.log('ResetPassword - resetPassword response:', res);
-      // Always assume success for now to test
       console.log('ResetPassword - Setting done to true');
       setDone(true);
-      setTimeout(() => {
-        console.log('ResetPassword - Navigating to login');
-        navigate('/login');
-      }, 2000);
+      // Removed automatic redirect
     } catch (err) {
       console.error('ResetPassword - Error:', err);
       setError('Error al restablecer la contraseña.');
@@ -45,7 +41,7 @@ const ResetPassword = () => {
           <div className="centered-form">
             <h2>Contraseña actualizada correctamente</h2>
             <p>
-              Haz click en este <a href="/login">login</a> para iniciar sesión.
+              <a href="/login">Haz click aquí para iniciar sesión</a>
             </p>
           </div>
         ) : (
