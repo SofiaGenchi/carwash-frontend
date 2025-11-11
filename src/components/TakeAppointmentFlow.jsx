@@ -67,7 +67,11 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
           {error && <p className="take-appointment-error">{error}</p>}
           <div className="services-flex">
             {services.map(service => (
-              <article key={service._id} className="service-card">
+              <article
+                key={service._id}
+                className={`service-card${selectedService?._id === service._id ? ' selected' : ''}`}
+                onClick={() => setSelectedService(service)}
+              >
                 <div className="service-img">
                   {service.image && (
                     <img src={service.image} alt={service.name} />
@@ -76,15 +80,6 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
                 <div className="service-info">
                   <h3>{service.name}</h3>
                   <p>{service.description}</p>
-                  <button
-                    className="btn-primary"
-                    onClick={() => {
-                      setSelectedService(service);
-                      setStep(2);
-                    }}
-                  >
-                    Seleccionar
-                  </button>
                 </div>
               </article>
             ))}
