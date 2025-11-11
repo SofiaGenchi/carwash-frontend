@@ -22,11 +22,8 @@ export async function sendRecoveryEmail({ email, name, link }) {
 		link               // Para {{link}}
 	};
 
-	// Logs de depuración
-	console.log('[EmailJS] SERVICE_ID:', SERVICE_ID);
-	console.log('[EmailJS] TEMPLATE_ID:', TEMPLATE_ID);
-	console.log('[EmailJS] USER_ID:', USER_ID);
-	console.log('[EmailJS] templateParams:', templateParams);
+		// Logs de depuración (solo parámetros, no credenciales)
+		console.log('[EmailJS] templateParams:', templateParams);
 
 	try {
 		const response = await emailjs.send(
