@@ -35,29 +35,37 @@ const ResetPassword = () => {
     <div>
       <Header />
       <main className="centered-main">
-        <form className="centered-form" onSubmit={handleSubmit}>
-          <h2>Restablecer contraseña</h2>
-          <input
-            type="password"
-            placeholder="Nueva contraseña"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-            minLength={6}
-          />
-          <button type="submit" className="login-btn-full">
-            Restablecer
-          </button>
-          <button
-            type="button"
-            className="register-btn"
-            onClick={() => navigate('/login')}
-          >
-            Volver al login
-          </button>
-          {error && <div style={{ color: 'red', marginTop: 10 }}>{error}</div>}
-          {done && <Loader text="Redirigiendo" />}
-        </form>
+        {done ? (
+          <div className="centered-form" style={{ textAlign: 'center', padding: 30 }}>
+            <h2 style={{ color: '#222', marginBottom: 20 }}>Contraseña actualizada correctamente</h2>
+            <p style={{ marginBottom: 20 }}>
+              Haz click en este <a href="/login" style={{ color: '#007bff', textDecoration: 'underline', fontWeight: 'bold' }}>login</a> para iniciar sesión.
+            </p>
+          </div>
+        ) : (
+          <form className="centered-form" onSubmit={handleSubmit}>
+            <h2>Restablecer contraseña</h2>
+            <input
+              type="password"
+              placeholder="Nueva contraseña"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              minLength={6}
+            />
+            <button type="submit" className="login-btn-full">
+              Restablecer
+            </button>
+            <button
+              type="button"
+              className="register-btn"
+              onClick={() => navigate('/login')}
+            >
+              Volver al login
+            </button>
+            {error && <div style={{ color: 'red', marginTop: 10 }}>{error}</div>}
+          </form>
+        )}
       </main>
       <Footer />
     </div>
