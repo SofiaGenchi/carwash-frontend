@@ -22,6 +22,12 @@ export async function sendRecoveryEmail({ email, name, link }) {
 		link               // Para {{link}}
 	};
 
+	// Logs de depuración
+	console.log('[EmailJS] SERVICE_ID:', SERVICE_ID);
+	console.log('[EmailJS] TEMPLATE_ID:', TEMPLATE_ID);
+	console.log('[EmailJS] USER_ID:', USER_ID);
+	console.log('[EmailJS] templateParams:', templateParams);
+
 	try {
 		const response = await emailjs.send(
 			SERVICE_ID,
@@ -29,8 +35,10 @@ export async function sendRecoveryEmail({ email, name, link }) {
 			templateParams,
 			USER_ID
 		);
+		console.log('[EmailJS] response:', response);
 		return response;
 	} catch (error) {
+		console.error('[EmailJS] error:', error);
 		throw new Error('Error al enviar el email de recuperación');
 	}
 }
