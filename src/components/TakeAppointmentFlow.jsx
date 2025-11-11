@@ -19,10 +19,12 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
       try {
         const res = await fetch('/api/services');
         const data = await res.json();
+        console.log('Servicios cargados:', data); // Log para verificar los datos
         const servicesArray = data.services || data || [];
         setServices(servicesArray);
         setAllServices(servicesArray);
       } catch (err) {
+        console.error('Error al cargar servicios:', err); // Log para errores
         setError('Error al cargar servicios');
       } finally {
         setLoading(false);
