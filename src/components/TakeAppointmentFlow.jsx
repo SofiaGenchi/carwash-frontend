@@ -65,21 +65,28 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
             }}
           />
           {error && <p className="take-appointment-error">{error}</p>}
-          <div className="services-list">
+          <div className="services-flex">
             {services.map(service => (
-              <div key={service._id} className="service-item">
-                <h3>{service.name}</h3>
-                <p>{service.description}</p>
-                <button
-                  className="btn-primary"
-                  onClick={() => {
-                    setSelectedService(service);
-                    setStep(2);
-                  }}
-                >
-                  Seleccionar
-                </button>
-              </div>
+              <article key={service._id} className="service-card">
+                <div className="service-img">
+                  {service.image && (
+                    <img src={service.image} alt={service.name} />
+                  )}
+                </div>
+                <div className="service-info">
+                  <h3>{service.name}</h3>
+                  <p>{service.description}</p>
+                  <button
+                    className="btn-primary"
+                    onClick={() => {
+                      setSelectedService(service);
+                      setStep(2);
+                    }}
+                  >
+                    Seleccionar
+                  </button>
+                </div>
+              </article>
             ))}
           </div>
         </div>
