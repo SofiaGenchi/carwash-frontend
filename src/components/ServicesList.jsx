@@ -1,4 +1,4 @@
-import React from 'react';
+// Component to display a selectable list of services
 
 const ServicesList = ({ services, onSelectService }) => {
   if (!services || services.length === 0) {

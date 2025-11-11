@@ -1,4 +1,4 @@
-import React from 'react';
+// Component to display services in an admin view
 
 const ServicesView = ({ services, openEditModal }) => (
   <div className="admin-table-container">

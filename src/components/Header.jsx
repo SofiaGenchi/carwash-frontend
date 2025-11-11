@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+// Header component with navigation and authentication handling
+import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import '../index.css';
 
-// Navegación pública (siempre visible)
+// Public navigation items (always visible)
 const publicNavItems = [
   { label: 'Inicio', scrollTo: 'hero', isScroll: true },
   { label: 'Servicios', scrollTo: 'servicios', isScroll: true },
   { label: 'Contacto', scrollTo: 'contacto', isScroll: true },
 ];
 
-// Navegación para usuarios NO autenticados
+// Navigation for unauthenticated users
 const guestNavItems = [
   { label: 'Login', to: '/login', isScroll: false },
   { label: 'Registrarse', to: '/register', isScroll: false },
 ];
 
-// Navegación para usuarios autenticados
+// Navigation for authenticated users
 const authNavItems = [
   { label: 'Turnos', to: '/dashboard', isScroll: false },
 ];
@@ -28,7 +30,7 @@ const Header = () => {
   const location = useLocation();
   const { isAuthenticated, user, logout } = useAuth();
 
-  // Función para determinar si el usuario es admin
+  // Function to determine if the user is an admin
   const isAdmin = () => {
     return user && user.role === 'admin';
   };
@@ -44,12 +46,12 @@ const Header = () => {
     }, 1200);
   };
 
-  // Obtener items de navegación según estado de autenticación y rol
+  // Get navigation items based on authentication state and role
   const getNavItems = () => {
     const items = [...publicNavItems];
     if (isAuthenticated) {
       items.push(...authNavItems);
-      // Si es admin, agregar Panel de Admin
+      // If admin, add Admin Panel
       if (isAdmin()) {
         items.push({ label: 'Panel Admin', to: '/admin', isScroll: false });
       }
@@ -59,7 +61,7 @@ const Header = () => {
     return items;
   };
 
-  // Función para scroll suave a secciones
+  // Smooth scroll function to sections
   const scrollToSection = (sectionId) => {
     if (location.pathname !== '/') {
       navigate('/');
@@ -102,7 +104,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="header">
+      <header>
         <div className="header-content">
           <Link to="/" className="logo">
             CarwashFreaks
@@ -169,39 +171,12 @@ const Header = () => {
         )}
       </header>
       {showLogoutOverlay && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          background: 'rgba(0,0,0,0.45)',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-          <div style={{
-            background: '#222',
-            borderRadius: 16,
-            boxShadow: '0 4px 24px rgba(0,0,0,0.25)',
-            padding: '40px 32px',
-            minWidth: 320,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            opacity: 0.98,
-          }}>
-            <div style={{ color: '#fff', fontSize: 26, fontWeight: 'bold', marginBottom: 24 }}>
+        <div className="logout-overlay">
+          <div className="logout-content">
+            <div className="logout-message">
               {logoutMsg || 'Cerrando sesión...'}
             </div>
-            <div style={{ width: 60, height: 60, border: '6px solid #fff', borderTop: '6px solid #00bcd4', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-            <style>{`
-              @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-              }
-            `}</style>
+            <div className="logout-spinner" />
           </div>
         </div>
       )}

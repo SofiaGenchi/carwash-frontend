@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+// Component to handle the appointment booking flow
+import { useEffect, useState } from 'react';
 import { createAppointment } from '../services/api';
+import '../index.css';
 
 function TakeAppointmentFlow({ onAppointmentCreated }) {
   const [step, setStep] = useState(1);
@@ -17,14 +19,10 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
       try {
         const res = await fetch('/api/services');
         const data = await res.json();
-        console.log('Services data received:', data);
-        
-        // Manejar la estructura de respuesta {services: [...]}
         const servicesArray = data.services || data || [];
         setServices(servicesArray);
         setAllServices(servicesArray);
       } catch (err) {
-        console.error('Error fetching services:', err);
         setError('Error al cargar servicios');
       } finally {
         setLoading(false);
@@ -57,47 +55,14 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
               const val = e.target.value.toLowerCase();
               if (Array.isArray(allServices)) {
                 setServices(
-                  allServices.filter(serv => serv.name && serv.name.toLowerCase().includes(val))
+                  allServices.filter(service =>
+                    service.name.toLowerCase().includes(val)
+                  )
                 );
               }
             }}
           />
-          <div className="service-list">
-            {services.length === 0 ? (
-              <p style={{ textAlign: 'center', color: '#666', marginTop: '20px' }}>
-                {error || 'No hay servicios disponibles en este momento'}
-              </p>
-            ) : (
-              services.map(service => (
-              <div
-                key={service._id}
-                className={`service-card-selectable${selectedService && selectedService._id === service._id ? ' selected' : ''}`}
-                onClick={() => setSelectedService(service)}
-              >
-                {/* Imagen del servicio */}
-                {service.image && (
-                  <div className="take-appointment-service-img">
-                    <img
-                      src={service.image}
-                      alt={service.name}
-                      className="take-appointment-service-img-el"
-                      loading="lazy"
-                    />
-                  </div>
-                )}
-                <div className="service-card-title">{service.name}</div>
-                <div className="service-card-desc">{service.description}</div>
-                <div className="service-card-price">ARS {service.price}</div>
-              </div>
-            )))}
-          </div>
-          {selectedService && (
-            <div className="take-appointment-actions">
-              <button className="btn-primary" onClick={() => setStep(2)}>
-                Siguiente
-              </button>
-            </div>
-          )}
+          {error && <p className="take-appointment-error">{error}</p>}
         </div>
       </section>
     );
@@ -133,13 +98,13 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
                 className="take-appointment-date"
                 required
               />
-              {isPastDate && <div style={{ color: 'red', marginTop: 8 }}>No puedes reservar en fechas pasadas.</div>}
+              {isPastDate && <div className="error-message">No puedes reservar en fechas pasadas.</div>}
             </div>
             <div>
               <label className="take-appointment-label">Horarios disponibles:</label>
               <div className="take-appointment-times">
                 {horariosValidos.length === 0 && date && !isPastDate && (
-                  <span style={{ color: 'red' }}>No hay horarios disponibles para el día seleccionado.</span>
+                  <span className="error-message">No hay horarios disponibles para el día seleccionado.</span>
                 )}
                 {horariosValidos.map(h => (
                   <button

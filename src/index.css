@@ -275,6 +275,9 @@ body {
   display: block;
   text-align: center;
 }
+.services-error {
+  color: red;
+}
 
 /* ==============================
           TAKE APPOINTMENT FLOW
@@ -421,7 +424,7 @@ body {
 }
 .take-appointment-error {
   color: red;
-  margin-bottom: 1rem;
+  margin-top: 8px;
 }
 .take-appointment-extra {
   display: flex;
@@ -1367,6 +1370,7 @@ body {
   text-align: center;
   font-size: 1.05rem;
 }
+
 /* ============================
         LOADER ANIMATION
 ============================ */
@@ -1379,4 +1383,92 @@ body {
   font-size: 1.2rem;
   color: #000000;
   font-weight: 500;
+}
+
+/* ==============================
+          RESET PASSWORD
+=============================== */
+.centered-form {
+  text-align: center;
+  padding: 30px;
+}
+.centered-form h2 {
+  color: #222;
+  margin-bottom: 20px;
+}
+.centered-form p {
+  margin-bottom: 20px;
+}
+.centered-form a {
+  color: #007bff;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+/* ==============================
+          FORGOT PASSWORD
+=============================== */
+.forgot-password-message {
+  margin-bottom: 10px;
+}
+.forgot-password-error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* ==============================
+          HEADER
+=============================== */
+.header-icon {
+  font-size: 28px;
+  color: #222;
+}
+.header-overlay {
+  color: #fff;
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+.header-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #fff;
+  border-top: 6px solid #00bcd4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+.take-appointment-message {
+  text-align: center;
+  color: #666;
+  margin-top: 20px;
+}
+.take-appointment-error {
+  color: red;
+  margin-top: 8px;
+}
+.take-appointment-no-slots {
+  color: red;
+}
+.home-main {
+  margin-top: 60px;
+}
+
+/* ==============================
+          REGISTER
+=============================== */
+.register-error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* ==============================
+          USER APPOINTMENTS
+=============================== */
+.user-appointments-main {
+  margin-top: 80px;
+  padding: 20px;
+  text-align: center;
+}
+.user-appointments-section {
+  margin-top: 40px;
 }

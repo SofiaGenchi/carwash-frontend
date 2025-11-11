@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+// Page for managing user appointments
+import { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import AppointmentsList from '../components/AppointmentsList';
 import { useState as useReactState } from 'react';
@@ -21,11 +22,8 @@ const UserAppointments = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log('UserAppointments mounted');
-
-    // Bloquear acceso si no está autenticado
+    // Redirect to login if not authenticated
     if (!isAuthenticated) {
-      console.log('Usuario no autenticado, redirigiendo al login');
       localStorage.setItem('loginRedirect', '/user-appointments');
       navigate('/login');
       return;
@@ -33,15 +31,9 @@ const UserAppointments = () => {
 
     const fetchUserAppointments = async () => {
       try {
-        console.log('Fetching appointments from backend...');
         const data = await fetchAppointments();
-        console.log('Appointments fetched:', data);
-        console.log('Data type:', typeof data);
-        console.log('Is array:', Array.isArray(data));
-
         setAppointments(data);
       } catch (error) {
-        console.error('Error al obtener los turnos:', error);
         setError('Error al obtener los turnos. Por favor, intenta nuevamente.');
       } finally {
         setLoading(false);
@@ -50,7 +42,7 @@ const UserAppointments = () => {
 
     fetchUserAppointments();
 
-    // Si hay un hash en la URL, hacer scroll a la sección correspondiente
+    // Scroll to section if hash is present in URL
     if (location.hash === '#turnos') {
       const turnosSection = document.getElementById('turnos');
       if (turnosSection) {

@@ -1,4 +1,4 @@
-import React from 'react';
+// Footer component with useful links and social media
 import { Link } from 'react-router-dom';
 
 const Footer = () => (

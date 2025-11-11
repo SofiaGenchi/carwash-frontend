@@ -1,7 +1,7 @@
-import React from 'react';
+// Component to display a list of appointments
 
 const AppointmentsList = ({ appointments, onCancelAppointment }) => {
-  // Validación más robusta para asegurar que appointments sea un array
+  // Ensure appointments is an array
   const appointmentsArray = Array.isArray(appointments) ? appointments : [];
   const activeAppointments = appointmentsArray.filter(a => a.status !== 'cancelled');
   if (activeAppointments.length === 0) {
@@ -78,7 +78,5 @@ const AppointmentsList = ({ appointments, onCancelAppointment }) => {
     </section>
   );
 };
-
-
 
 export default AppointmentsList;

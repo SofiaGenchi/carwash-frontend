@@ -1,4 +1,4 @@
-import React from 'react';
+// Component to display a list of users in an admin view
 
 const UsersView = ({ users, openEditModal }) => (
   <div className="admin-table-container">

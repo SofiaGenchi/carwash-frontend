@@ -1,12 +1,18 @@
+// Cancel an appointment by ID
 export async function cancelAppointment(appointmentId) {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch(`/api/appointments/${appointmentId}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const apiUrl = 'https://gateway-api-lztd.onrender.com';
+  const response = await fetch(
+    `${apiUrl}/api/appointments/cancel/${appointmentId}`,
+    {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    }
+  );
   if (!response.ok) {
     let errorData = {};
     try { errorData = await response.json(); } catch {}
@@ -15,12 +21,14 @@ export async function cancelAppointment(appointmentId) {
   return response.json();
 }
 
+// Fetch generic data
 export async function fetchData() {
   const response = await fetch('/api/data');
   if (!response.ok) throw new Error('Network response was not ok');
   return response.json();
 }
 
+// Fetch appointments for the logged-in user
 export async function fetchAppointments() {
   const token = localStorage.getItem('accessToken');
   
@@ -46,7 +54,7 @@ export async function fetchAppointments() {
 
   const data = await response.json();
   
-  // Manejar diferentes estructuras de respuesta de la API
+  // Handle different API response structures
   if (Array.isArray(data)) {
     return data;
   } else if (data.appointments && Array.isArray(data.appointments)) {
@@ -59,6 +67,7 @@ export async function fetchAppointments() {
   }
 }
 
+// Create a new appointment
 export async function createAppointment(appointmentData) {
   const token = localStorage.getItem('accessToken');
   const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -68,7 +77,7 @@ export async function createAppointment(appointmentData) {
   console.log('User info:', user);
   console.log('Sending appointment data:', appointmentData);
   
-  // Validar que tengamos los datos necesarios
+  // Validate required data
   if (!token) {
     throw new Error('No hay token de autenticación. Por favor, inicia sesión nuevamente.');
   }
@@ -102,7 +111,7 @@ export async function createAppointment(appointmentData) {
   return response.json();
 }
 
-// Admin API functions
+// Fetch all users (Admin)
 export async function fetchAllUsers() {
   const token = localStorage.getItem('accessToken');
   const response = await fetch('/api/users', {
@@ -121,7 +130,7 @@ export async function fetchAllUsers() {
   const data = await response.json();
   console.log('fetchAllUsers raw response:', data);
   
-  // Manejar estructura de respuesta: {users: [...]} o array directo
+  // Handle response structure: {users: [...]} or direct array
   if (Array.isArray(data)) {
     console.log('fetchAllUsers returning array directly:', data);
     return data;
@@ -134,6 +143,7 @@ export async function fetchAllUsers() {
   }
 }
 
+// Fetch all appointments (Admin)
 export async function fetchAllAppointments() {
   const token = localStorage.getItem('accessToken');
   const response = await fetch('/api/appointments/all', {
@@ -152,7 +162,7 @@ export async function fetchAllAppointments() {
   const data = await response.json();
   console.log('Raw appointments API response:', data);
   
-  // Siempre devolver estructura consistente {appointments: [...]}
+  // Always return consistent structure {appointments: [...]} 
   if (Array.isArray(data)) {
     return { appointments: data };
   } else if (data.appointments && Array.isArray(data.appointments)) {
@@ -163,6 +173,7 @@ export async function fetchAllAppointments() {
   }
 }
 
+// Fetch all services
 export async function fetchAllServices() {
   const response = await fetch('/api/services', {
     method: 'GET',
@@ -179,7 +190,7 @@ export async function fetchAllServices() {
   const data = await response.json();
   console.log('fetchAllServices raw response:', data);
   
-  // Manejar estructura de respuesta: {services: [...]} o array directo
+  // Handle response structure: {services: [...]} or direct array
   if (Array.isArray(data)) {
     console.log('fetchAllServices returning array directly:', data);
     return data;
@@ -191,7 +202,7 @@ export async function fetchAllServices() {
   }
 }
 
-// Admin Edit/Update functions
+// Update user details (Admin)
 export async function updateUser(userId, userData) {
   const token = localStorage.getItem('accessToken');
   const response = await fetch(`/api/users/${userId}`, {
@@ -211,6 +222,7 @@ export async function updateUser(userId, userData) {
   return response.json();
 }
 
+// Update appointment details
 export async function updateAppointment(appointmentId, appointmentData) {
   const token = localStorage.getItem('accessToken');
   
@@ -237,6 +249,7 @@ export async function updateAppointment(appointmentId, appointmentData) {
   return response.json();
 }
 
+// Update service details
 export async function updateService(serviceId, serviceData) {
   const token = localStorage.getItem('accessToken');
   const response = await fetch(`/api/services/${serviceId}`, {
@@ -256,6 +269,7 @@ export async function updateService(serviceId, serviceData) {
   return response.json();
 }
 
+// Request password recovery email
 export const forgotPassword = async (email) => {
   console.log('forgotPassword called with email:', email);
   
@@ -281,6 +295,7 @@ export const forgotPassword = async (email) => {
   }
 };
 
+// Reset user password
 export const resetPassword = async (token, password) => {
   const res = await fetch('/api/users/reset-password', {
     method: 'POST',

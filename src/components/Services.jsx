@@ -1,6 +1,6 @@
-import React from 'react'
-
+// Component to display a list of services
 import { useEffect, useState } from 'react';
+import '../index.css';
 
 function Services() {
   const [services, setServices] = useState([]);
@@ -12,7 +12,6 @@ function Services() {
       try {
         const res = await fetch('/api/services');
         const data = await res.json();
-        // El Gateway API devuelve { services: [...] }
         setServices(data.services || data);
       } catch (err) {
         setError('Error al cargar servicios');
@@ -30,7 +29,7 @@ function Services() {
     }).format(value);
 
   if (loading) return <p>Cargando servicios...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (error) return <p className="services-error">{error}</p>;
 
   return (
     <section className="services-section">
@@ -39,7 +38,6 @@ function Services() {
         {services.map((s) => (
           <article key={s._id} className="service-card">
             <div className="service-img">
-              {/* Si tienes la URL de la imagen en la base de datos, úsala aquí */}
               {s.image ? <img src={s.image} alt={s.name} /> : null}
             </div>
             <h3>{s.name}</h3>

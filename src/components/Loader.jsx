@@ -1,3 +1,4 @@
+// Loader component to display a loading animation
 import { useState, useEffect } from 'react';
 
 const Loader = ({ text = 'Redirigiendo' }) => {

@@ -1,9 +1,11 @@
-import React, { useRef } from "react";
+// Home page with hero section and services overview
+import { useRef } from "react";
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Services from "../components/Services";
+import '../index.css';
 
 const Home = () => {
   const serviciosRef = useRef(null);
@@ -27,7 +29,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <main style={{ marginTop: 60 }}>
+      <main className="home-main">
         <section id="hero" className="hero-section">
           <div className="hero-slider">
             <img

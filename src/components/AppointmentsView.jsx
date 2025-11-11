@@ -1,4 +1,4 @@
-import React from 'react';
+// Component to display appointments in an admin view
 
 const AppointmentsView = ({ appointments, openEditModal }) => (
   <div className="admin-table-container">

@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+// Login page for user authentication
+import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
 
-
 const Login = () => {
   const navigate = useNavigate();
   const { refreshAuth } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [setError] = useState('');
+  const [setLoading] = useState(false);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -32,11 +32,11 @@ const Login = () => {
         setLoading(false);
         return;
       }
-      // Guardo el access token y usuario en localStorage
+      // Save the access token and user in localStorage
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('user', JSON.stringify(data.user));
       refreshAuth();
-      // breve delay antes de redirigir
+      // Redirect after a brief delay
       setTimeout(() => {
         const redirectTo = localStorage.getItem('loginRedirect') || '/';
         localStorage.removeItem('loginRedirect');
@@ -59,33 +59,24 @@ const Login = () => {
           <div className="login-right">
             <form className="login-form" onSubmit={handleSubmit}>
               <h2>Iniciar sesión</h2>
-              {error && <div style={{ color: 'red', marginBottom: 10, textAlign: 'center' }}>Usuario o contraseña incorrectos</div>}
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="Correo electrónico" 
-                required 
-                value={form.email} 
+              <input
+                type="email"
+                name="email"
+                placeholder="Correo electrónico"
+                value={form.email}
                 onChange={handleChange}
-                autoComplete="email"
+                required
               />
-              <input 
-                type="password" 
-                name="password" 
-                placeholder="Contraseña" 
-                required 
-                value={form.password} 
+              <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                value={form.password}
                 onChange={handleChange}
-                autoComplete="current-password"
+                required
               />
-              <button type="submit" className="login-btn-full" disabled={loading}>Iniciar sesión</button>
-              <button type="button" className="register-btn" onClick={() => navigate('/register')}>Registrarse</button>
-              <button
-                type="button"
-                className="link-button"
-                onClick={() => navigate('/forgot-password')}
-              >
-                ¿Olvidaste tu contraseña?
+              <button type="submit" className="login-btn-full">
+                Iniciar sesión
               </button>
             </form>
           </div>

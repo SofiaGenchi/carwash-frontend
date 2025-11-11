@@ -1,15 +1,16 @@
+// Page for resetting user passwords
 import { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { resetPassword } from '../services/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Loader from '../components/Loader';
+import '../index.css';
 
 const ResetPassword = () => {
   const [params] = useSearchParams();
   const token = params.get('token');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [setError] = useState('');
   const [done, setDone] = useState(false);
   const navigate = useNavigate();
 
@@ -36,10 +37,10 @@ const ResetPassword = () => {
       <Header />
       <main className="centered-main">
         {done ? (
-          <div className="centered-form" style={{ textAlign: 'center', padding: 30 }}>
-            <h2 style={{ color: '#222', marginBottom: 20 }}>Contraseña actualizada correctamente</h2>
-            <p style={{ marginBottom: 20 }}>
-              Haz click en este <a href="/login" style={{ color: '#007bff', textDecoration: 'underline', fontWeight: 'bold' }}>login</a> para iniciar sesión.
+          <div className="centered-form">
+            <h2>Contraseña actualizada correctamente</h2>
+            <p>
+              Haz click en este <a href="/login">login</a> para iniciar sesión.
             </p>
           </div>
         ) : (
@@ -56,14 +57,6 @@ const ResetPassword = () => {
             <button type="submit" className="login-btn-full">
               Restablecer
             </button>
-            <button
-              type="button"
-              className="register-btn"
-              onClick={() => navigate('/login')}
-            >
-              Volver al login
-            </button>
-            {error && <div style={{ color: 'red', marginTop: 10 }}>{error}</div>}
           </form>
         )}
       </main>

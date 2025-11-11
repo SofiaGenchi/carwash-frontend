@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// Admin panel page for managing users, appointments, and services
+import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
@@ -23,7 +24,7 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  // Estados para el modo de edición
+  // Modal state for editing
   const [editModal, setEditModal] = useState({ show: false, type: '', data: null });
   const [editForm, setEditForm] = useState({});
   const [updating, setUpdating] = useState(false);
@@ -31,22 +32,18 @@ const AdminPanel = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-
   useEffect(() => {
     if (!isAuthenticated || !user || user.role !== 'admin') {
       navigate('/');
     }
   }, [isAuthenticated, user, navigate]);
 
-
+  // Fetch all users data
   const fetchUsersData = async () => {
     setLoading(true);
     setError('');
     try {
       const data = await fetchAllUsers();
-      console.log('Users data received:', data);
-      
-      // fetchAllUsers ya retorna el array directamente
       setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err.message);
@@ -55,64 +52,29 @@ const AdminPanel = () => {
     }
   };
 
-
+  // Fetch all appointments data
   const fetchAppointmentsData = async () => {
     setLoading(true);
     setError('');
     try {
-      // Fetch all data in parallel since backend populate doesn't work in microservices
       const [appointmentsResponse, usersResponse, servicesResponse] = await Promise.all([
         fetchAllAppointments(),
         fetchAllUsers(),
         fetchAllServices()
       ]);
 
-      console.log('Appointments response:', appointmentsResponse);
-      console.log('Users response:', usersResponse);
-      console.log('Services response:', servicesResponse);
-
-      // Extract arrays from responses
       const appointmentsArray = Array.isArray(appointmentsResponse?.appointments) 
         ? appointmentsResponse.appointments 
         : [];
       
-      // fetchAllUsers ya retorna el array directamente, no un objeto {users: [...]}
       const usersArray = Array.isArray(usersResponse) 
         ? usersResponse 
         : [];
       
-      // fetchAllServices ya retorna el array directamente, no un objeto {services: [...]}
       const servicesArray = Array.isArray(servicesResponse) 
         ? servicesResponse 
         : [];
 
-      console.log('Extracted arrays:', {
-        appointments: appointmentsArray,
-        users: usersArray,
-        services: servicesArray
-      });
-
-      // Debug: Log specific IDs
-      console.log('Appointment user IDs:', appointmentsArray.map(a => a.user));
-      console.log('Appointment service IDs:', appointmentsArray.map(a => a.service));
-      console.log('Available user IDs:', usersArray.map(u => u._id));
-      console.log('Available service IDs:', servicesArray.map(s => s._id));
-      
-      // Check for exact matches
-      appointmentsArray.forEach(appointment => {
-        const userExists = usersArray.find(u => u._id === appointment.user);
-        const serviceExists = servicesArray.find(s => s._id === appointment.service);
-        console.log(`Appointment ${appointment._id}:`, {
-          needsUser: appointment.user,
-          userExists: !!userExists,
-          userFound: userExists?._id,
-          needsService: appointment.service, 
-          serviceExists: !!serviceExists,
-          serviceFound: serviceExists?._id
-        });
-      });
-
-      // Create lookup maps
       const usersMap = usersArray.reduce((map, user) => {
         map[user._id] = user;
         return map;
@@ -123,38 +85,25 @@ const AdminPanel = () => {
         return map;
       }, {});
 
-      console.log('Users map:', usersMap);
-      console.log('Services map:', servicesMap);
-
-      // Enrich appointments with user and service data
       const enrichedAppointments = appointmentsArray.map(appointment => {
         const user = usersMap[appointment.user];
         const service = servicesMap[appointment.service];
-        
-        console.log(`Mapping appointment ${appointment._id}:`, {
-          userIdFromAppointment: appointment.user,
-          foundUser: user,
-          serviceIdFromAppointment: appointment.service,
-          foundService: service
-        });
 
         return {
           ...appointment,
-          // Preservar IDs originales para edición, pero agregar datos completos para mostrar
-          originalUserId: appointment.user, // ID original como string
-          originalServiceId: appointment.service, // ID original como string
+          originalUserId: appointment.user,
+          originalServiceId: appointment.service,
           user: user || { 
-            name: `Usuario no encontrado (ID: ${appointment.user.substring(0,8)}...)`, 
+            name: `User not found (ID: ${appointment.user.substring(0,8)}...)`, 
             email: 'N/A' 
           },
           service: service || { 
-            name: `Servicio no encontrado (ID: ${appointment.service.substring(0,8)}...)`, 
+            name: `Service not found (ID: ${appointment.service.substring(0,8)}...)`, 
             price: 0 
           }
         };
       });
-      
-      console.log('Enriched appointments:', enrichedAppointments);
+
       setAppointments(enrichedAppointments);
     } catch (err) {
       setError(err.message);
@@ -163,15 +112,12 @@ const AdminPanel = () => {
     }
   };
 
-
+  // Fetch all services data
   const fetchServicesData = async () => {
     setLoading(true);
     setError('');
     try {
       const data = await fetchAllServices();
-      console.log('Services data received:', data);
-      
-      // fetchAllServices ya retorna el array directamente
       setServices(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err.message);
@@ -179,7 +125,6 @@ const AdminPanel = () => {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     switch (activeView) {
@@ -197,32 +142,27 @@ const AdminPanel = () => {
     }
   }, [activeView]);
 
-
+  // Open the edit modal with the provided data
   const openEditModal = (type, data) => {
-    console.log('Opening edit modal with data:', data);
-    
     setEditModal({ show: true, type, data });
-    
-    // Preparar los datos para el formulario
     let formData = { ...data };
-    
-    // Si es un appointment, convertir el time al formato correcto para input type="time"
+
     if (type === 'appointment' && formData.time) {
-      // Convertir "10.00hs" a "10:00"
       const timeStr = formData.time.replace('hs', '').replace('.', ':');
-      // Asegurar formato HH:MM
       const [hours, minutes] = timeStr.split(':');
       formData.time = `${hours.padStart(2, '0')}:${(minutes || '00').padStart(2, '0')}`;
     }
-    
+
     setEditForm(formData);
   };
 
+  // Close the edit modal
   const closeEditModal = () => {
     setEditModal({ show: false, type: '', data: null });
     setEditForm({});
   };
 
+  // Handle the submission of the edit form
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setUpdating(true);
@@ -232,7 +172,6 @@ const AdminPanel = () => {
       const { type, data } = editModal;
       let payload = { ...editForm };
 
-      // Seguridad: nunca enviar password si no se está cambiando
       if (type === 'user' && !payload.newPassword) {
         delete payload.password;
       }
@@ -243,28 +182,19 @@ const AdminPanel = () => {
           await fetchUsersData();
           break;
         case 'appointment':
-          // Convertir el time de "10:00" a "10.00hs" para la API
           if (payload.time) {
             const [hours, minutes] = payload.time.split(':');
             payload.time = `${hours}.${minutes}hs`;
           }
           
-          // Usar los IDs originales que preservamos en el enriquecimiento
           const appointmentPayload = {
             date: payload.date,
             time: payload.time,
             status: payload.status,
             notes: payload.notes || '',
-            // Usar los IDs originales preservados
             user: editModal.data.originalUserId,
             service: editModal.data.originalServiceId
           };
-          
-          console.log('Appointment payload being sent:', appointmentPayload);
-          console.log('Using preserved IDs:', {
-            originalUserId: editModal.data.originalUserId,
-            originalServiceId: editModal.data.originalServiceId
-          });
           
           await updateAppointment(data._id, appointmentPayload);
           await fetchAppointmentsData();
@@ -296,8 +226,8 @@ const AdminPanel = () => {
       <Header />
       <div className="admin-panel">
         <div className="admin-header">
-          <h1>Panel de Administración</h1>
-          <p>Bienvenido, {user.nombre} {user.apellido}</p>
+          <h1>Admin Panel</h1>
+          <p>Welcome, {user.nombre} {user.apellido}</p>
         </div>
 
       <div className="admin-navigation">
@@ -305,19 +235,19 @@ const AdminPanel = () => {
           className={`admin-nav-btn ${activeView === 'users' ? 'active' : ''}`}
           onClick={() => setActiveView('users')}
         >
-          Usuarios ({users.length})
+          Users ({users.length})
         </button>
         <button 
           className={`admin-nav-btn ${activeView === 'appointments' ? 'active' : ''}`}
           onClick={() => setActiveView('appointments')}
         >
-          Turnos ({appointments.length})
+          Appointments ({appointments.length})
         </button>
         <button 
           className={`admin-nav-btn ${activeView === 'services' ? 'active' : ''}`}
           onClick={() => setActiveView('services')}
         >
-          Servicios ({services.length})
+          Services ({services.length})
         </button>
       </div>
 
@@ -325,14 +255,14 @@ const AdminPanel = () => {
         {loading && (
           <div className="admin-loading">
             <div className="loading-spinner"></div>
-            <p>Cargando...</p>
+            <p>Loading...</p>
           </div>
         )}
 
         {error && (
           <div className="admin-error">
             <p>Error: {error}</p>
-            <button onClick={() => window.location.reload()}>Reintentar</button>
+            <button onClick={() => window.location.reload()}>Retry</button>
           </div>
         )}
 
@@ -351,12 +281,12 @@ const AdminPanel = () => {
         )}
       </div>
 
-      {/* Modal de Edición */}
+      {/* Edit Modal */}
       {editModal.show && (
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h3>Editar {editModal.type === 'user' ? 'Usuario' : editModal.type === 'appointment' ? 'Turno' : 'Servicio'}</h3>
+              <h3>Edit {editModal.type === 'user' ? 'User' : editModal.type === 'appointment' ? 'Appointment' : 'Service'}</h3>
               <button className="modal-close" onClick={closeEditModal}>×</button>
             </div>
             
@@ -364,7 +294,7 @@ const AdminPanel = () => {
               {editModal.type === 'user' && (
                 <>
                   <div className="form-group">
-                    <label>Nombre:</label>
+                    <label>First Name:</label>
                     <input
                       type="text"
                       value={editForm.nombre || ''}
@@ -373,7 +303,7 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Apellido:</label>
+                    <label>Last Name:</label>
                     <input
                       type="text"
                       value={editForm.apellido || ''}
@@ -391,7 +321,7 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Teléfono:</label>
+                    <label>Phone:</label>
                     <input
                       type="text"
                       value={editForm.telefono || ''}
@@ -400,12 +330,12 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Rol:</label>
+                    <label>Role:</label>
                     <select
                       value={editForm.role || 'user'}
                       onChange={(e) => handleFormChange('role', e.target.value)}
                     >
-                      <option value="user">Usuario</option>
+                      <option value="user">User</option>
                       <option value="admin">Admin</option>
                     </select>
                   </div>
@@ -415,7 +345,7 @@ const AdminPanel = () => {
               {editModal.type === 'appointment' && (
                 <>
                   <div className="form-group">
-                    <label>Fecha:</label>
+                    <label>Date:</label>
                     <input
                       type="date"
                       value={editForm.date ? new Date(editForm.date).toISOString().split('T')[0] : ''}
@@ -424,7 +354,7 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Hora:</label>
+                    <label>Time:</label>
                     <input
                       type="time"
                       value={editForm.time || ''}
@@ -433,15 +363,15 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Estado:</label>
+                    <label>Status:</label>
                     <select
                       value={editForm.status || 'pending'}
                       onChange={(e) => handleFormChange('status', e.target.value)}
                     >
-                      <option value="pending">Pendiente</option>
-                      <option value="confirmed">Confirmado</option>
-                      <option value="cancelled">Cancelado</option>
-                      <option value="completed">Completado</option>
+                      <option value="pending">Pending</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="completed">Completed</option>
                     </select>
                   </div>
                 </>
@@ -450,7 +380,7 @@ const AdminPanel = () => {
               {editModal.type === 'service' && (
                 <>
                   <div className="form-group">
-                    <label>Nombre:</label>
+                    <label>Name:</label>
                     <input
                       type="text"
                       value={editForm.name || ''}
@@ -459,7 +389,7 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Descripción:</label>
+                    <label>Description:</label>
                     <textarea
                       value={editForm.description || ''}
                       onChange={(e) => handleFormChange('description', e.target.value)}
@@ -468,7 +398,7 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Precio:</label>
+                    <label>Price:</label>
                     <input
                       type="number"
                       value={editForm.price || ''}
@@ -478,7 +408,7 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Duración (minutos):</label>
+                    <label>Duration (minutes):</label>
                     <input
                       type="number"
                       value={editForm.duration || ''}
@@ -488,13 +418,13 @@ const AdminPanel = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Estado:</label>
+                    <label>Status:</label>
                     <select
                       value={editForm.isActive !== undefined ? editForm.isActive : true}
                       onChange={(e) => handleFormChange('isActive', e.target.value === 'true')}
                     >
-                      <option value="true">Activo</option>
-                      <option value="false">Inactivo</option>
+                      <option value="true">Active</option>
+                      <option value="false">Inactive</option>
                     </select>
                   </div>
                 </>
@@ -504,10 +434,10 @@ const AdminPanel = () => {
 
               <div className="modal-actions">
                 <button type="button" onClick={closeEditModal} className="btn-cancel">
-                  Cancelar
+                  Cancel
                 </button>
                 <button type="submit" disabled={updating} className="btn-save">
-                  {updating ? 'Guardando...' : 'Guardar'}
+                  {updating ? 'Saving...' : 'Save'}
                 </button>
               </div>
             </form>

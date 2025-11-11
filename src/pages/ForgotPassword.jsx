@@ -1,29 +1,25 @@
+// Page for handling password recovery requests
 import { useState } from 'react';
 import { forgotPassword } from '../services/api';
 import { sendRecoveryEmail } from '../services/emailService';
-import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import '../index.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [setLoading] = useState(false);
 
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      // Llama a la API para obtener el token y datos del usuario
       const result = await forgotPassword(email);
-      // Espera que la API devuelva { token, name, email }
       if (result && result.token && result.name && result.email) {
-        // Construye el link para el template
         const link = `${window.location.origin}/reset-password?token=${result.token}`;
-        // Envía el email usando emailjs
         await sendRecoveryEmail({
           email: result.email,
           name: result.name,
@@ -47,7 +43,7 @@ const ForgotPassword = () => {
         <form className="centered-form" onSubmit={handleSubmit}>
           <h2>Recuperar contraseña</h2>
           {sent ? (
-            <div style={{ marginBottom: 10 }}>
+            <div className="forgot-password-message">
               Si el correo existe, recibirás un enlace para restablecer tu contraseña.
             </div>
           ) : (
@@ -57,19 +53,8 @@ const ForgotPassword = () => {
                 placeholder="Correo electrónico"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                required
               />
-              <button type="submit" className="login-btn-full" disabled={loading}>
-                Enviar enlace
-              </button>
-              <button
-                type="button"
-                className="register-btn"
-                onClick={() => navigate('/login')}
-              >
-                Volver al login
-              </button>
-              {error && <div style={{ color: 'red', marginTop: 10 }}>{error}</div>}
+              {error && <div className="forgot-password-error">{error}</div>}
             </>
           )}
         </form>
