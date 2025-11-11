@@ -1,9 +1,9 @@
 import emailjs from 'emailjs-com';
 
 // Configuración de EmailJS (reemplaza con tus datos reales)
-const SERVICE_ID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
-const TEMPLATE_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
-const USER_ID = process.env.REACT_APP_EMAILJS_USER_ID;
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const USER_ID = import.meta.env.VITE_EMAILJS_USER_ID;
 
 /**
  * Envía el email de recuperación de contraseña al usuario.
