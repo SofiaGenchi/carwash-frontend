@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { forgotPassword } from '../services/api';
+import { sendRecoveryEmail } from '../services/emailService';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -13,20 +14,27 @@ const ForgotPassword = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('ForgotPassword: handleSubmit called with email:', email);
     setLoading(true);
     setError('');
     try {
-      console.log('ForgotPassword: calling forgotPassword API...');
+      // Llama a la API para obtener el token y datos del usuario
       const result = await forgotPassword(email);
-      console.log('ForgotPassword: API response:', result);
-      setSent(true);
+      // Espera que la API devuelva { token, name, email }
+      if (result && result.token && result.name && result.email) {
+        // Envía el email usando emailjs
+        await sendRecoveryEmail({
+          email: result.email,
+          name: result.name,
+          token: result.token
+        });
+        setSent(true);
+      } else {
+        setError('No se pudo obtener los datos para el email.');
+      }
     } catch (err) {
-      console.error('ForgotPassword: error occurred:', err);
       setError('Hubo un error. Intenta nuevamente.');
     } finally {
       setLoading(false);
-      console.log('ForgotPassword: process completed');
     }
   };
 
