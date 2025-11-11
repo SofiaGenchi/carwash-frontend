@@ -4,7 +4,7 @@ export async function cancelAppointment(appointmentId) {
   console.log('cancelAppointment - Token available:', !!token);
   console.log('cancelAppointment - Cancelling appointment ID:', appointmentId);
   const response = await fetch(
-    `/api/appointments/cancel/${appointmentId}`,
+    `/api/appointments/${appointmentId}`,
     {
       method: 'DELETE',
       headers: {
