@@ -10,7 +10,7 @@ const ResetPassword = () => {
   const [params] = useSearchParams();
   const token = params.get('token');
   const [password, setPassword] = useState('');
-  const [setError] = useState('');
+  const [error, setError] = useState('');
   const [done, setDone] = useState(false);
   const navigate = useNavigate();
 

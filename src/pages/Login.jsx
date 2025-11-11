@@ -9,8 +9,8 @@ const Login = () => {
   const navigate = useNavigate();
   const { refreshAuth } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
-  const [setError] = useState('');
-  const [setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -75,6 +75,7 @@ const Login = () => {
                 onChange={handleChange}
                 required
               />
+              {error && <div className="login-error">{error}</div>}
               <button type="submit" className="login-btn-full">
                 Iniciar sesión
               </button>

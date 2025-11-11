@@ -12,9 +12,9 @@ import { fetchAppointments, cancelAppointment } from '../services/api';
 
 const UserAppointments = () => {
   const [appointments, setAppointments] = useState([]);
-  const [form, setForm] = useReactState({ service: '', date: '', time: '' });
-  const [takeError, setTakeError] = useReactState('');
-  const [takeLoading, setTakeLoading] = useReactState(false);
+  const [form, setForm] = useState({ service: '', date: '', time: '' });
+  const [takeError, setTakeError] = useState('');
+  const [takeLoading, setTakeLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
