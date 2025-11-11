@@ -6,11 +6,12 @@ export async function cancelAppointment(appointmentId) {
   const response = await fetch(
     `/api/appointments/${appointmentId}`,
     {
-      method: 'DELETE',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify({ status: 'cancelled' }),
       credentials: 'include',
     }
   );
