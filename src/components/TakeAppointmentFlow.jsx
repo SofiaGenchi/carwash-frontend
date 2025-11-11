@@ -84,6 +84,15 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
               </article>
             ))}
           </div>
+          <div className="take-appointment-actions">
+            <button
+              className="btn-primary"
+              disabled={!selectedService}
+              onClick={() => setStep(2)}
+            >
+              Siguiente
+            </button>
+          </div>
         </div>
       </section>
     );
