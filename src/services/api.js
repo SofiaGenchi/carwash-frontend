@@ -1,6 +1,8 @@
 // Cancel an appointment by ID
 export async function cancelAppointment(appointmentId) {
   const token = localStorage.getItem('accessToken');
+  console.log('cancelAppointment - Token available:', !!token);
+  console.log('cancelAppointment - Cancelling appointment ID:', appointmentId);
   const response = await fetch(
     `/api/appointments/cancel/${appointmentId}`,
     {
@@ -12,12 +14,16 @@ export async function cancelAppointment(appointmentId) {
       credentials: 'include',
     }
   );
+  console.log('cancelAppointment - Response status:', response.status);
   if (!response.ok) {
     let errorData = {};
     try { errorData = await response.json(); } catch {}
+    console.error('cancelAppointment - Error data:', errorData);
     throw new Error(errorData.message || 'Error al cancelar el turno');
   }
-  return response.json();
+  const result = await response.json();
+  console.log('cancelAppointment - Success result:', result);
+  return result;
 }
 
 // Fetch generic data
@@ -54,15 +60,45 @@ export async function fetchAppointments() {
   const data = await response.json();
   
   // Handle different API response structures
+  let appointmentsArray = [];
   if (Array.isArray(data)) {
-    return data;
+    appointmentsArray = data;
   } else if (data.appointments && Array.isArray(data.appointments)) {
-    return data.appointments;
+    appointmentsArray = data.appointments;
   } else if (data.data && Array.isArray(data.data)) {
-    return data.data;
+    appointmentsArray = data.data;
   } else {
     console.warn('Estructura de respuesta inesperada:', data);
     return [];
+  }
+
+  // Fetch services to populate appointment.service
+  try {
+    const servicesResponse = await fetch('/api/services', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const servicesData = await servicesResponse.json();
+    const servicesArray = Array.isArray(servicesData) ? servicesData : servicesData.services || [];
+    const servicesMap = servicesArray.reduce((map, service) => {
+      map[service._id] = service;
+      return map;
+    }, {});
+
+    // Enrich appointments with service data
+    const enrichedAppointments = appointmentsArray.map(appointment => ({
+      ...appointment,
+      service: servicesMap[appointment.service] || { name: 'Servicio no encontrado', price: 0 }
+    }));
+
+    console.log('fetchAppointments - Enriched appointments:', enrichedAppointments);
+    return enrichedAppointments;
+  } catch (error) {
+    console.error('Error fetching services for appointments:', error);
+    // Return appointments without enrichment if services fetch fails
+    return appointmentsArray;
   }
 }
 
