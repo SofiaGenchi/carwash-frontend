@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -79,6 +79,11 @@ const Login = () => {
               <button type="submit" className="login-btn-full">
                 Iniciar sesión
               </button>
+              <div className="forgot-password-link">
+                <Link to="/forgot-password">
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </div>
             </form>
           </div>
         </section>
