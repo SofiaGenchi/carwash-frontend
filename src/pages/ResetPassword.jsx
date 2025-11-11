@@ -22,13 +22,14 @@ const ResetPassword = () => {
       console.log('ResetPassword - Calling resetPassword');
       const res = await resetPassword(token, password);
       console.log('ResetPassword - resetPassword response:', res);
-      if (res && (res.message === 'Contraseña actualizada correctamente.' || res.success)) {
+      // Assume success if no error in response
+      if (res && !res.error) {
         console.log('ResetPassword - Password reset successful, setting done');
         setDone(true);
         setTimeout(() => navigate('/login'), 2000);
       } else {
         console.log('ResetPassword - Password reset failed, response:', res);
-        setError(res.message || 'Error al restablecer la contraseña.');
+        setError(res.message || res.error || 'Error al restablecer la contraseña.');
       }
     } catch (err) {
       console.error('ResetPassword - Error:', err);
