@@ -21,11 +21,13 @@ const ForgotPassword = () => {
       const result = await forgotPassword(email);
       // Espera que la API devuelva { token, name, email }
       if (result && result.token && result.name && result.email) {
+        // Construye el link para el template
+        const link = `${window.location.origin}/reset-password?token=${result.token}`;
         // Envía el email usando emailjs
         await sendRecoveryEmail({
           email: result.email,
           name: result.name,
-          token: result.token
+          link
         });
         setSent(true);
       } else {
