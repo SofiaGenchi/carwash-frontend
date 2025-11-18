@@ -25,13 +25,6 @@ export async function cancelAppointment(appointmentId) {
   return result;
 }
 
-// Fetch generic data
-export async function fetchData() {
-  const response = await fetch('/api/data');
-  if (!response.ok) throw new Error('Network response was not ok');
-  return response.json();
-}
-
 // Fetch appointments for the logged-in user
 export async function fetchAppointments() {
   const token = localStorage.getItem('accessToken');
@@ -96,7 +89,6 @@ export async function fetchAppointments() {
     return enrichedAppointments;
   } catch (error) {
     console.error('Error fetching services for appointments:', error);
-    // Return appointments without enrichment if services fetch fails
     return appointmentsArray;
   }
 }

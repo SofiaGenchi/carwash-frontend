@@ -74,7 +74,7 @@ const UserAppointments = () => {
     );
   }
 
-  // Cancelar turno y refrescar lista
+  // Cancel appointment and refresh list
   const handleCancelAppointment = async (appointmentId) => {
     if (window.confirm('¿Estás seguro de cancelar este turno?')) {
       setLoading(true);
@@ -90,7 +90,7 @@ const UserAppointments = () => {
     }
   };
 
-  // Mostrar siempre la lista de turnos y el formulario para tomar turno
+  // Always show the list of appointments and the form to take an appointment
   return (
     <div>
       <Header />

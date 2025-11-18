@@ -19,7 +19,7 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
         const data = await res.json();
         console.log('Services data received:', data);
         
-        // Manejar la estructura de respuesta {services: [...]}
+        // Handle both possible data structures
         const servicesArray = data.services || data || [];
         setServices(servicesArray);
         setAllServices(servicesArray);
@@ -74,7 +74,7 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
                 className={`service-card-selectable${selectedService && selectedService._id === service._id ? ' selected' : ''}`}
                 onClick={() => setSelectedService(service)}
               >
-                {/* Imagen del servicio */}
+                {/* Service image */}
                 {service.image && (
                   <div className="take-appointment-service-img">
                     <img
@@ -176,7 +176,7 @@ function TakeAppointmentFlow({ onAppointmentCreated }) {
             {step === 3 ? 'Confirmar turno' : 'Turno reservado'}
           </h2>
           <div className="confirm-card">
-            {/* Imagen del servicio */}
+            {/* Service image */}
             {selectedService?.image && (
               <div className="take-appointment-service-img">
                 <img

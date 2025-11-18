@@ -24,7 +24,6 @@ const ResetPassword = () => {
       console.log('ResetPassword - resetPassword response:', res);
       console.log('ResetPassword - Setting done to true');
       setDone(true);
-      // Removed automatic redirect
     } catch (err) {
       console.error('ResetPassword - Error:', err);
       setError('Error al restablecer la contraseña.');
